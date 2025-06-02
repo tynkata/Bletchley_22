@@ -43,7 +43,7 @@ namespace Bletchley_22.Controllers
                 return View("Index", currentGame);
             }
 
-            // process guess
+
             var guess = new Guess
             {
                 Code = guessCode.ToUpper()
@@ -66,15 +66,15 @@ namespace Bletchley_22.Controllers
 
             currentGame.Guesses.Add(guess);
 
-            // Optionally add win check here to redirect to Win page
 
             return RedirectToAction("Index");
         }
 
-        // GET: /Game/Win
+
         public IActionResult Win()
         {
             return View();
         }
     }
 }
+//gamecontroller
