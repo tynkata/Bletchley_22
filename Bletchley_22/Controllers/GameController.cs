@@ -9,7 +9,6 @@ namespace Bletchley_22.Controllers
     {
         private static Game currentGame;
 
-        // GET: /Game/Index
         public IActionResult Index()
         {
             if (currentGame == null)
@@ -19,7 +18,6 @@ namespace Bletchley_22.Controllers
             return View(currentGame);
         }
 
-        // GET: /Game/New
         public IActionResult New()
         {
             currentGame = new Game
@@ -31,7 +29,6 @@ namespace Bletchley_22.Controllers
             return RedirectToAction("Index");
         }
 
-        // POST: /Game/MakeGuess
         [HttpPost]
         public IActionResult MakeGuess(string guessCode)
         {
@@ -52,7 +49,6 @@ namespace Bletchley_22.Controllers
                 Code = guessCode.ToUpper()
             };
 
-            // simple feedback logic example
             guess.Correct = 0;
             guess.Misplaced = 0;
 
