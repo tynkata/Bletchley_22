@@ -1,3 +1,137 @@
-﻿@{
-    Layout = "_Layout";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship Guessing Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            background-color: #4682b4;
+            color: white;
+            padding: 10px 0;
+            border-radius: 5px;
+        }
+        h1, h2 {
+            margin: 0;
+        }
+        #game-board {
+            margin: 20px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 0 auto;
+            max-width: 200px;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: #87cefa;
+            border: 2px solid #4682b4;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        #guess-input {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #guess-form input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #4682b4;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        #guess-form button {
+            padding: 10px 15px;
+            background-color: #4682b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #guess-form button:hover {
+            background-color: #5a9bd4;
+        }
+        #feedback {
+            margin: 20px 0;
+        }
+        #feedback h3 {
+            margin: 10px 0;
+        }
+        #game-status {
+            text-align: center;
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Battleship Guessing Game</h1>
+    </header>
+    <main>
+        <section id="game-board">
+            <h2>Game Board</h2>
+            <div class="grid">
+                <!-- Create a grid for the game board -->
+                <div class="cell" data-coordinate="0"></div>
+                <div class="cell" data-coordinate="1"></div>
+                <div class="cell" data-coordinate="2"></div>
+                <div class="cell" data-coordinate="3"></div>
+                <div class="cell" data-coordinate="4"></div>
+                <div class="cell" data-coordinate="5"></div>
+                <div class="cell" data-coordinate="6"></div>
+                <div class="cell" data-coordinate="7"></div>
+            </div>
+        </section>
+        <section id="guess-input">
+            <h2>Your Guess</h2>
+            <form id="guess-form">
+                <input type="number" min="0" max="7" required placeholder="Enter your guess (0-7)">
+                <button type="submit">Submit Guess</button>
+            </form>
+        </section>
+        <section id="feedback">
+            <h2>Feedback</h2>
+            <div id="guessed-numbers">
+                <h3>Guessed Numbers:</h3>
+                <ul id="guessed-list"></ul>
+            </div>
+            <div id="guessed-positions">
+                <h3>Guessed Numbers and Positions:</h3>
+                <ul id="position-list"></ul>
+            </div>
+        </section>
+        <section id="game-status">
+            <h2>Game Status</h2>
+            <p id="attempts-left">Attempts Left: 13</p>
+            <p id="game-message"></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Battleship Game. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
+```
