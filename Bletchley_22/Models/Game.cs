@@ -16,15 +16,27 @@ namespace Bletchley_22.Models
 
         public List<Guess> Guesses { get; set; } = new List<Guess>();
 
-        // Determines if the game has been solved
+        public int CodeLength => SecretCode.Length;
+
+        public int GuessesMade => Guesses.Count;
+
+        public string StatusMessage
+        {
+            get
+            {
+                if (IsSolved) return "Game solved";
+                if (Guesses.Count == 0) return "Make your first guess";
+                return "Keep trying";
+            }
+        }
+
         public bool IsSolved => Guesses.Any(g => g.Code == SecretCode);
 
-        // Returns total number of guesses
-        public int GuessCount => Guesses.Count;
-
-        // Evaluates a new guess and returns the Guess object
         public Guess EvaluateGuess(string input)
         {
+            if (string.IsNullOrEmpty(input) || input.Length != SecretCode.Length)
+                throw new ArgumentException($"Guess must be exactly {SecretCode.Length} characters");
+
             int correct = 0;
             int misplaced = 0;
 
@@ -33,10 +45,9 @@ namespace Bletchley_22.Models
             var secretMatched = new bool[secret.Length];
             var guessMatched = new bool[guess.Length];
 
-            // First pass – check for correct positions
             for (int i = 0; i < secret.Length; i++)
             {
-                if (i < guess.Length && guess[i] == secret[i])
+                if (guess[i] == secret[i])
                 {
                     correct++;
                     secretMatched[i] = true;
@@ -44,7 +55,6 @@ namespace Bletchley_22.Models
                 }
             }
 
-            // Second pass – check for misplaced characters
             for (int i = 0; i < guess.Length; i++)
             {
                 if (guessMatched[i]) continue;

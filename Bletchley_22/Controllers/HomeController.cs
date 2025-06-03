@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Bletchley_22.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Bletchley_22.Controllers
 {
@@ -10,9 +11,28 @@ namespace Bletchley_22.Controllers
 
         private const int CodeLength = 4;
 
+        private static Game? currentGame;  // made nullable to fix CS8618
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+
+            // Initialize currentGame if null
+            if (currentGame == null)
+            {
+                currentGame = new Game
+                {
+                    SecretCode = GenerateSecretCode(CodeLength)
+                };
+            }
+        }
+
+        // Helper to generate a random secret code (A-Z letters)
+        private string GenerateSecretCode(int length)
+        {
+            var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return new string(Enumerable.Range(0, length).Select(_ => chars[random.Next(chars.Length)]).ToArray());
         }
 
         public IActionResult Index()
@@ -22,44 +42,61 @@ namespace Bletchley_22.Controllers
 
         public IActionResult Play()
         {
-            var model = new Game
+            if (currentGame == null)
             {
-                CodeLength = CodeLength,
-                GuessesMade = 0,
-                StatusMessage = "Keep trying"
-            };
+                currentGame = new Game
+                {
+                    SecretCode = GenerateSecretCode(CodeLength)
+                };
+            }
 
-            return View(model);
+            return View(currentGame);
         }
 
         [HttpPost]
         public IActionResult SubmitGuess(string guess)
         {
-            int guessesMade = TempData.ContainsKey("Guesses") ? (int)TempData["Guesses"] : 0;
-            guessesMade++;
-            TempData["Guesses"] = guessesMade;
-
-            var model = new Game
+            if (currentGame == null)
             {
-                CodeLength = CodeLength,
-                GuessesMade = guessesMade,
-                StatusMessage = "Guess submitted"
-            };
+                currentGame = new Game
+                {
+                    SecretCode = GenerateSecretCode(CodeLength)
+                };
+            }
 
-            return View("Play", model);
+            if (string.IsNullOrEmpty(guess) || guess.Length != CodeLength)
+            {
+                ModelState.AddModelError("", $"Guess must be exactly {CodeLength} characters");
+                return View("Play", currentGame);
+            }
+
+            // Evaluate guess and add to currentGame
+            var evaluatedGuess = currentGame.EvaluateGuess(guess.ToUpper());
+
+            if (currentGame.IsSolved)
+            {
+                return RedirectToAction("Win");
+            }
+
+            return View("Play", currentGame);
         }
 
         public IActionResult GameStatus()
         {
-            int guessesMade = TempData.ContainsKey("Guesses") ? (int)TempData["Guesses"] : 0;
-            var model = new Game
+            if (currentGame == null)
             {
-                CodeLength = CodeLength,
-                GuessesMade = guessesMade,
-                StatusMessage = "Current game status"
-            };
+                currentGame = new Game
+                {
+                    SecretCode = GenerateSecretCode(CodeLength)
+                };
+            }
 
-            return View(model);
+            return View(currentGame);
+        }
+
+        public IActionResult Win()
+        {
+            return View();
         }
 
         public IActionResult Privacy()
@@ -74,4 +111,3 @@ namespace Bletchley_22.Controllers
         }
     }
 }
-//CONTROLLER

@@ -7,7 +7,7 @@ namespace Bletchley_22.Controllers
 {
     public class GameController : Controller
     {
-        private static Game currentGame;
+        private static Game currentGame = null!; // null-forgiving to silence CS8618
 
         public IActionResult Index()
         {
@@ -23,7 +23,7 @@ namespace Bletchley_22.Controllers
             currentGame = new Game
             {
                 Id = 1,
-                SecretCode = "ABCD", 
+                SecretCode = "ABCD",
                 Guesses = new List<Guess>()
             };
             return RedirectToAction("Index");
@@ -42,7 +42,6 @@ namespace Bletchley_22.Controllers
                 ModelState.AddModelError("", "Invalid guess length");
                 return View("Index", currentGame);
             }
-
 
             var guess = new Guess
             {
@@ -66,10 +65,8 @@ namespace Bletchley_22.Controllers
 
             currentGame.Guesses.Add(guess);
 
-
             return RedirectToAction("Index");
         }
-
 
         public IActionResult Win()
         {
@@ -77,4 +74,3 @@ namespace Bletchley_22.Controllers
         }
     }
 }
-//gamecontroller
